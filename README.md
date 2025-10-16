@@ -1,6 +1,42 @@
 ```markdown
 # Federal Reserve MCP Server Setup Guide
 
+## 🚀 The Story in Three Parts
+
+### 🏦 1. Build an MCP Server in 60 Seconds (for the Federal Reserve)
+Start by spinning up a fully working **Model Context Protocol (MCP)** server in under a minute.  
+No fluff — just clean, fast setup that shows how quickly you can move from idea to running service.
+
+### ⚙️ 2. Configure GitHub Actions Toolkit
+Next, wire up **GitHub Actions** for **CI/CD**.  
+This is where platform engineers shine — automating builds, managing releases, running tests, and keeping everything repeatable and reliable.
+
+### ☁️ 3. Deploy on Cosmonic Control (on K8s) and Configure in Claude
+Finally, take it live.  
+Deploy the service to **Cosmonic Control** on Kubernetes, connect it to **Claude**, and configure your workflow for smart, autonomous operations across your platform.
+
+
+
+## 🧩 Requirements
+
+## 💻 Software Setup
+- **[node](https://nodejs.org/)** – NodeJS runtime  
+- **[npm](https://github.com/npm/cli)** – Node Package Manager (NPM) manages packages for the NodeJS ecosystem  
+- **[wash](https://github.com/wasmCloud/wash)** – Wasm Shell (for developing and building Wasm components) with the `openapi2mcp` plugin  
+
+### Platform Setup: ☁️ Setup Cosmonic Control on Kubernetes
+
+Follow the installation guide to set up **Cosmonic Control** on your Kubernetes cluster:  
+👉 [Install Cosmonic Control](https://docs.cosmonic.com/install-cosmonic-control)
+
+
+## ⚡️ Build Our Server in 60 Seconds
+
+node - NodeJS runtime
+npm - Node Package Manager (NPM) manages packages for the NodeJS ecosystem
+wash - Wasm Shell (for developing and building Wasm components) with the openapi2mcp plugin
+
+
 ## ⚡️ Build Our Server in 60 Seconds
 
 ```bash
@@ -63,6 +99,8 @@ This shows how to deploy your own WebAssembly component image using the http-tri
 
 #### Option A — Inline with Indexed Keys (Recommended for Bash)
 
+For `bash` use:
+
 ```bash
 helm install fed-fred-mcp2 oci://ghcr.io/cosmonic-labs/charts/http-trigger \
   --version 0.1.2 \
@@ -72,17 +110,30 @@ helm install fed-fred-mcp2 oci://ghcr.io/cosmonic-labs/charts/http-trigger \
   --set pathNote="/v1/mcp"
 ```
 
+For `zsh` use:
+
+```bash
+helm install fed oci://ghcr.io/cosmonic-labs/charts/http-trigger \
+  --version 0.1.2 \
+  --set 'components[0].name=fed' \
+  --set 'components[0].image=ghcr.io/liamrandall/fed-fred-mcp:v0.1.0' \
+  --set ingress.host=fred.localhost.cosmonic.sh \
+  --set pathNote=/v1/mcp
+  ```
+
 💡 **Tip:** Helm arrays must be indexed (components[0]). Otherwise, Helm treats components as an object and fails validation ❌
 
 #### Option B — Inline with --set-json (Safe for zsh & CI)
 
 ```bash
-helm install fed-fred-mcp2 oci://ghcr.io/cosmonic-labs/charts/http-trigger \
+helm install fed oci://ghcr.io/cosmonic-labs/charts/http-trigger \
   --version 0.1.2 \
-  --set-json 'components=[{"name":"fed-fred-mcp","image":"ghcr.io/liamrandall/fed-fred-mcp:v0.1.0"}]' \
+  --set-json 'components=[{"name":"fed","ghcr.io/liamrandall/fed:v0.1.0"}]' \
   --set ingress.host="fred.localhost.cosmonic.sh" \
   --set pathNote="/v1/mcp"
 ```
+
+
 
 ✅ `--set-json` avoids quoting issues in zsh and CI pipelines.
 
