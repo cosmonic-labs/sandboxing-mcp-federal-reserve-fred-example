@@ -1,8 +1,8 @@
-# Federal Reserve MCP Server Setup Guide
+# Federal Reserve FRED MCP Server Building Guide
 
 ## 🚀 The Story in Three Parts
 
-### 🏦 1. Build an MCP Server in 60 Seconds (for the Federal Reserve)
+### 🏦 1. Build an MCP Server in 60 Seconds (for the Federal Reserve FRED API)
 Instantly build a fully working **Model Context Protocol (MCP)** server in under a minute with Contract-driven generation with OpenAPI Specifications.
 
 We are targeting [FRED](https://fred.stlouisfed.org/), from the Federal Reserve Bank of St. Louis.
@@ -34,8 +34,8 @@ Follow the installation guide to set up **Cosmonic Control** on your Kubernetes 
 
 Let's start by downloading a pre-configured WebAssembly MCP Server Template: 
 ```bash
-wash new --git https://github.com/cosmonic-labs/mcp-server-template-ts.git "fred"
-cd fred
+wash new --git https://github.com/cosmonic-labs/mcp-server-template-ts.git "fred-mcp"
+cd fred-mcp
 ```
 
 ### 📥 Download the OpenAPI Spec for the Federal Reserve
@@ -57,8 +57,8 @@ wash openapi2mcp ../fred-schema.yaml
 ### 🧑‍💻 Develop Locally
 Then, let's launch the developer loop- `Wash` is smart enough that it looks at the underlying programming language and knows how to do two things:
 
-1. Launch the iodmatic build tools, so you can continue to work on your project in your code editor of choice.
-2. Launch `pre` and `post` commit hooks to customize the functionallity or experience of the project.  
+1. Launch the idiomatic build tools, so you can continue to work on your project in your code editor of choice.
+2. Launch `pre` and `post` commit hooks to customize the functionality or experience of the project.  
 
 In this case we are launching an MCP Inspector for us to diagnose our loop locally.
 
@@ -77,17 +77,21 @@ You can keep developing locally with `wash dev` — just expose your server to e
 ngrok http http://localhost:8000
 ```
 
-## ⚙️ Leverage GitHub Actions Toolkit
+## ⚙️ Configure Included GitHub Actions Toolkit
+
+The Cosmonic MCP Server Template comes pre-configured with a **GitHub Actions Toolkit** for **CI/CD**; let's push our project to github, build a release, and ship our new WebAssembly Sandboxed MCP Server to the `ghcr` OCI registry  
 
 ### 🏗️ Create and Push Repo
 
-Leverage your existing
+Let's start by setting up a new repo for our code - our Github Actions will need the rights to create and approve pull requests. Most enterprise or team accounts will already have that enabled.
+
+In this case, I'll use my personal account (you should use yours); then let's configure:
 
 ```bash
 git init
 git add .
 git commit -m "Initial MCP Server for Federal Reserve"
-git remote add origin git@github.com:LiamRandall/fed-fred-mcp.git
+git remote add origin git@github.com:LiamRandall/fred-mcp.git
 git push -u origin main
 ```
 
@@ -97,17 +101,28 @@ In your GitHub repo:
 
 **Settings → Actions → General → Allow GitHub Actions to create and approve pull requests**
 
-🔗 Example: https://github.com/LiamRandall/fed-fred-mcp/settings/actions
+🔗 Example: [https://github.com/LiamRandall/fred-mcp/settings/actions](https://github.com/LiamRandall/fred-mcp/settings/actions)
 
 ### 🚦 Run Workflow
 
+Once we permissions, let's navigate to Actions - and generate a kick off our workflow: `Generate MCP from OpenAPI`
+
 ### 🔀 Merge Pull Request
+
+Refresh your coffee ☕️ and 🤯 - you've got a pull request to approve!  Let's review, approve, and merge it in!
+
+### 📦 Build a Release and Ship it!
+
+Let's head back to the main page where we can create a release - make sure to create a new tag, I like to generate build notes, and ship it!
+
 
 🎃 You'll end up with a package created for Pumpkin Spice ☕
 
+Now that was fast, but we have a solid foundation; we have now have our MCP Server setup, we can build releases, and in just a few minutes we already have secure MCP Servers ready to deploy.  At Cosmonic we want to optimize for a great developer experience that embraces the secure principles by design.
+
 ## 🚀 Deploy a Custom OCI Image with the Cosmonic HTTP Trigger Helm Chart
 
-This shows how to deploy your own WebAssembly component image using the http-trigger Helm chart.
+Once our WebAssembly MCP Server in available in at `ghcr` let's go ahead and deploy it onto k8s with Cosmonic Control.
 
 ### ✅ Working Commands
 
@@ -116,22 +131,22 @@ This shows how to deploy your own WebAssembly component image using the http-tri
 For `bash` use:
 
 ```bash
-helm install fed-fred-mcp2 oci://ghcr.io/cosmonic-labs/charts/http-trigger \
+helm install fred-mcp oci://ghcr.io/cosmonic-labs/charts/http-trigger \
   --version 0.1.2 \
-  --set components[0].name="fed-fred-mcp" \
-  --set components[0].image="ghcr.io/liamrandall/fed-fred-mcp:v0.1.0" \
-  --set ingress.host="fred.localhost.cosmonic.sh" \
+  --set components[0].name="fred-mcp" \
+  --set components[0].image="ghcr.io/liamrandall/fred-mcp:v0.1.0" \
+  --set ingress.host="fred-mcp.localhost.cosmonic.sh" \
   --set pathNote="/v1/mcp"
 ```
 
 For `zsh` use:
 
 ```bash
-helm install fed oci://ghcr.io/cosmonic-labs/charts/http-trigger \
+helm install fred-mcp oci://ghcr.io/cosmonic-labs/charts/http-trigger \
   --version 0.1.2 \
-  --set 'components[0].name=fed' \
-  --set 'components[0].image=ghcr.io/liamrandall/fed-fred-mcp:v0.1.0' \
-  --set ingress.host=fred.localhost.cosmonic.sh \
+  --set 'components[0].name=fred-mcp' \
+  --set 'components[0].image=ghcr.io/liamrandall/fred-mcp:v0.1.0' \
+  --set ingress.host=fred-mcp.localhost.cosmonic.sh \
   --set pathNote=/v1/mcp
   ```
 
@@ -157,18 +172,18 @@ helm install fed oci://ghcr.io/cosmonic-labs/charts/http-trigger \
 
 ```yaml
 components:
-  - name: fed-fred-mcp
-    image: ghcr.io/liamrandall/fed-fred-mcp:v0.1.0
+  - name: fred-mcp
+    image: ghcr.io/liamrandall/fred-mcp:v0.1.0
 
 ingress:
-  host: fred.localhost.cosmonic.sh
+  host: fred-mcp.localhost.cosmonic.sh
   pathNote: "/v1/mcp"
 ```
 
 **Deploy with:**
 
 ```bash
-helm install fed-fred-mcp2 oci://ghcr.io/cosmonic-labs/charts/http-trigger \
+helm install fed-fred-mcp oci://ghcr.io/cosmonic-labs/charts/http-trigger \
   --version 0.1.2 \
   -f values.fred.yaml
 ```
@@ -186,8 +201,8 @@ helm template preview oci://ghcr.io/cosmonic-labs/charts/http-trigger \
 ### Inspect a Running or Failed Release
 
 ```bash
-helm get values fed-fred-mcp2 -n default
-helm get manifest fed-fred-mcp2 -n default | less
+helm get values fred-mcp -n default
+helm get manifest fred-mcp -n default | less
 ```
 
 ## ⚙️ Common Fields
