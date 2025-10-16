@@ -131,22 +131,22 @@ Once our WebAssembly MCP Server in available in at `ghcr` let's go ahead and dep
 For `bash` use:
 
 ```bash
-helm install fred-mcp-demo oci://ghcr.io/cosmonic-labs/charts/http-trigger \
+helm install fred-mcp oci://ghcr.io/cosmonic-labs/charts/http-trigger \
   --version 0.1.2 \
-  --set components[0].name="fred-mcp-demo" \
-  --set components[0].image="ghcr.io/liamrandall/fred-mcp-demo:v0.1.0" \
-  --set ingress.host="fred-mcp-demo.localhost.cosmonic.sh" \
+  --set components[0].name="fred-mcp" \
+  --set components[0].image="ghcr.io/liamrandall/fred-mcp:v0.1.0" \
+  --set ingress.host="fred-mcp.localhost.cosmonic.sh" \
   --set pathNote="/v1/mcp"
 ```
 
 For `zsh` use:
 
 ```bash
-helm install fred-mcp-demo oci://ghcr.io/cosmonic-labs/charts/http-trigger \
+helm install fred-mcp oci://ghcr.io/cosmonic-labs/charts/http-trigger \
   --version 0.1.2 \
-  --set 'components[0].name=fred-mcp-demo' \
-  --set 'components[0].image=ghcr.io/liamrandall/fred-mcp-demo:v0.1.0' \
-  --set ingress.host=fred-mcp-demo.localhost.cosmonic.sh \
+  --set 'components[0].name=fred-mcp' \
+  --set 'components[0].image=ghcr.io/liamrandall/fred-mcp:v0.1.0' \
+  --set ingress.host=fred-mcp.localhost.cosmonic.sh \
   --set pathNote=/v1/mcp
   ```
 
