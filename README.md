@@ -1,20 +1,20 @@
-```markdown
 # Federal Reserve MCP Server Setup Guide
 
 ## 🚀 The Story in Three Parts
 
 ### 🏦 1. Build an MCP Server in 60 Seconds (for the Federal Reserve)
-Start by spinning up a fully working **Model Context Protocol (MCP)** server in under a minute.  
-No fluff — just clean, fast setup that shows how quickly you can move from idea to running service.
+Instantly build a fully working **Model Context Protocol (MCP)** server in under a minute with Contract-driven generation with OpenAPI Specifications.
+
+We are targeting [FRED](https://fred.stlouisfed.org/), from the Federal Reserve Bank of St. Louis.
 
 ### ⚙️ 2. Configure GitHub Actions Toolkit
-Next, wire up **GitHub Actions** for **CI/CD**.  
-This is where platform engineers shine — automating builds, managing releases, running tests, and keeping everything repeatable and reliable.
+Next, we'll walk through the included  **GitHub Actions** for **CI/CD**; we'll setup our first release and ship our new WebAssembly Sandboxed MCP Server to the `ghcr` OCI registry 
+
+Automate builds, tests, and releases with GitHub Actions for seamless CI/CD — keeping everything repeatable, reliable, and hands-off.
 
 ### ☁️ 3. Deploy on Cosmonic Control (on K8s) and Configure in Claude
 Finally, take it live.  
-Deploy the service to **Cosmonic Control** on Kubernetes, connect it to **Claude**, and configure your workflow for smart, autonomous operations across your platform.
-
+Easily deploy our tiny and fast WebAssembly Component to **Cosmonic Control** on Kubernetes, connect it to **Claude**, and start generating reports.
 
 
 ## 🧩 Requirements
@@ -30,44 +30,58 @@ Follow the installation guide to set up **Cosmonic Control** on your Kubernetes 
 👉 [Install Cosmonic Control](https://docs.cosmonic.com/install-cosmonic-control)
 
 
-## ⚡️ Build Our Server in 60 Seconds
+### ⚡️ Build Our Server in 60 Seconds
 
-node - NodeJS runtime
-npm - Node Package Manager (NPM) manages packages for the NodeJS ecosystem
-wash - Wasm Shell (for developing and building Wasm components) with the openapi2mcp plugin
-
-
-## ⚡️ Build Our Server in 60 Seconds
-
+Let's start by downloading a pre-configured WebAssembly MCP Server Template: 
 ```bash
-wash new --git https://github.com/cosmonic-labs/mcp-server-template-ts.git "fed"
-cd fed-fred-mcp
-cp ../fred-schema.yaml ./  # or curl it down
+wash new --git https://github.com/cosmonic-labs/mcp-server-template-ts.git "fred"
+cd fred
 ```
 
-## 📥 Download the OpenAPI Spec for the Federal Reserve
+### 📥 Download the OpenAPI Spec for the Federal Reserve
+
+`openapi2mcp` leverages contract driven development - so let's grab an OpenAPI Specification for the Federal Reserve Fred API:
 
 ```bash
 wget https://raw.githubusercontent.com/cosmonic-labs/sandboxing-mcp-federal-reserve-fred-example/refs/heads/main/fred-schema.yaml
 ```
 
-## 🧠 Generate the Code
+### 🧠 Generate the Code
+
+In our template directory, let's go ahead and generate the API's; there is a 1:1 mapping in between OpenAPI Endpoints and MCP Tools.
 
 ```bash
 wash openapi2mcp ../fred-schema.yaml
 ```
 
-## 🧑‍💻 Develop Locally
+### 🧑‍💻 Develop Locally
+Then, let's launch the developer loop- `Wash` is smart enough that it looks at the underlying programming language and knows how to do two things:
+
+1. Launch the iodmatic build tools, so you can continue to work on your project in your code editor of choice.
+2. Launch `pre` and `post` commit hooks to customize the functionallity or experience of the project.  
+
+In this case we are launching an MCP Inspector for us to diagnose our loop locally.
 
 ```bash
 wash dev
 ```
 
+### 🔍 Inspect your Secure WebAssembly MCP Server
+
 Use the MCP Inspector to query and verify your load 🔍
+
+### 💡 Optional
+You can keep developing locally with `wash dev` — just expose your server to external LLM hosts using **[ngrok](https://ngrok.com/)**:  
+
+```bash
+ngrok http http://localhost:8000
+```
 
 ## ⚙️ Leverage GitHub Actions Toolkit
 
 ### 🏗️ Create and Push Repo
+
+Leverage your existing
 
 ```bash
 git init
