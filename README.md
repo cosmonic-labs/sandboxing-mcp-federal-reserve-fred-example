@@ -43,7 +43,7 @@ cd fred-mcp
 `openapi2mcp` leverages contract driven development - so let's grab an OpenAPI Specification for the Federal Reserve Fred API:
 
 ```bash
-wget https://raw.githubusercontent.com/cosmonic-labs/sandboxing-mcp-federal-reserve-fred-example/refs/heads/main/fred-schema.yaml
+wget https://raw.githubusercontent.com/cosmonic-labs/sandboxing-mcp-federal-reserve-fred-example/refs/heads/main/fred-spec.yaml
 ```
 
 ### 🧠 Generate the Code
